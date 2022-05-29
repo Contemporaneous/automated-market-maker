@@ -12,7 +12,7 @@ contract LiquidityPool {
 
     uint256 private _totalSupply;
 
-    bool initialized;
+    bool public initialized;
 
 
     constructor (IERC20 _tokenA, IERC20 _tokenB)  {
@@ -38,7 +38,7 @@ contract LiquidityPool {
         initialized = true;
     }
 
-    function gerBalanceA() public view returns (uint256) {
+    function getBalanceA() public view returns (uint256) {
         return tokenA.balanceOf(address(this));
     }
 
@@ -46,7 +46,7 @@ contract LiquidityPool {
         return tokenB.balanceOf(address(this));
     }
 
-    function exactInTrafer(bool depositA, uint256 amount) public {
+    function exactInTransfer(bool depositA, uint256 amount) public {
 
         uint256 balanceA = tokenA.balanceOf(address(this));
         uint256 balanceB = tokenB.balanceOf(address(this));
@@ -59,8 +59,8 @@ contract LiquidityPool {
         } else {
             require(tokenB.allowance(msg.sender, address(this)) >= amount);
             uint256 transfer = _totalSupply/(balanceB-amount) - balanceA;
-            tokenA.transferFrom(address(this), msg.sender, transfer);
-            tokenB.transfer(msg.sender, amount);
+            tokenB.transferFrom(msg.sender,address(this), transfer);
+            tokenA.transfer(msg.sender, amount);
         }
     }
 
@@ -72,12 +72,12 @@ contract LiquidityPool {
             require(tokenA.allowance(msg.sender, address(this)) >= amount*2);
             uint256 transfer = _totalSupply/(balanceA-amount) - balanceB;
             tokenB.transferFrom(msg.sender, address(this), transfer);
-            tokenA.transferFrom(address(this), msg.sender, amount);
+            tokenA.transfer(msg.sender, amount);
         } else {
             require(tokenB.allowance(msg.sender, address(this)) >= amount*2);
             uint256 transfer = _totalSupply/(balanceB-amount) - balanceA;
             tokenA.transferFrom(msg.sender, address(this), transfer);
-            tokenB.transferFrom(address(this), msg.sender, amount);
+            tokenB.transfer(msg.sender, amount);
         }
     }
 
