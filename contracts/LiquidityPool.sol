@@ -9,13 +9,14 @@ contract LiquidityPool {
     address public owner;
     IERC20 public  tokenA;
     IERC20 public  tokenB;
+    IERC20 public liquidityHolderToken;
 
     uint256 private _totalSupply;
 
     bool public initialized;
 
 
-    constructor (IERC20 _tokenA, IERC20 _tokenB)  {
+    constructor (IERC20 _tokenA, IERC20 _tokenB, IERC20 _liquidityHolderToken)  {
         owner = msg.sender;
 
         require(address(_tokenA) != address(0) && address(_tokenB) != address(0));
@@ -23,7 +24,7 @@ contract LiquidityPool {
 
         tokenA = _tokenA;
         tokenB = _tokenB;
-
+        liquidityHolderToken = _liquidityHolderToken;
         initialized = false;
     }
 
@@ -35,6 +36,7 @@ contract LiquidityPool {
         tokenB.transferFrom(msg.sender, address(this), _tokenSupplyB);
 
         _totalSupply = _tokenSupplyA * _tokenSupplyB;
+        liquidityHolderToken.transfer(msg.sender, _totalSupply);
         initialized = true;
     }
 

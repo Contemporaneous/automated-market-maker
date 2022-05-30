@@ -14,3 +14,9 @@ contract LiquidityTokenB is ERC20 {
         _mint(msg.sender, totalSupply);
     }
 }
+
+contract LiquidityHolderToken is ERC20 {
+    constructor(uint256 totalSupply) ERC20("LiquidityHolderToken", "LHT") {
+        _mint(msg.sender, totalSupply);
+    }
+}
